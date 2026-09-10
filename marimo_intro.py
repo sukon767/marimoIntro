@@ -49,7 +49,7 @@ def _(np, parameters):
 def _(parameters, pl, rng):
     delta = rng.normal(0, parameters["sigma"].value, parameters["N"].value)
     prices = pl.concat([pl.Series("prices", [100.0]), pl.Series("prices", delta).cum_sum() + 100])
-    return (prices,)
+    return delta, prices
 
 
 @app.cell
@@ -105,11 +105,11 @@ def _(mo):
 
 
 @app.cell
-def _(df):
+def _(delta, df):
     mx = df["prices"].max()
     mn = df["prices"].min()
     avg = df["prices"].mean()
-    stddev = df["prices"].std()
+    stddev = delta.std()
     return avg, mn, mx, stddev
 
 
